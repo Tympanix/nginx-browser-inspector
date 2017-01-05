@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.ui.menu {
+    min-height: 4rem;
+}
+.main.container {
+    margin: 8rem 0;
+    min-height: calc(100vh);
+}
+
+.ui.header {
+    margin-bottom: 2rem;
+}

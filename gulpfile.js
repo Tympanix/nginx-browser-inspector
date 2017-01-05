@@ -40,7 +40,7 @@ gulp.task('build', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([APP + '/*.html', APP + '/css/*.css', APP + '/**/*.js'], ['build:concat']);
+    gulp.watch([APP + '/*.html', APP + '/**/*.css', APP + '/**/*.js'], ['build:concat']);
     gulp.watch([APP + '/views/**/*.html'], ['build:static']);
 });
 
