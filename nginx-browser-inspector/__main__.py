@@ -10,9 +10,9 @@ BROWSER_PATH = 'data/browsers'
 CRAWLER_PATH = 'data/crawlers'
 
 REGEX = [
-    re.compile('^Mozilla/5\.0 (Macintosh|Windows( NT [0-9\.]*)?|Android[0-9\.-]+|X11|iPhone|iPad|Linux|'
-               'U|WOW64|x86_64|x64|PPC|Win64|Intel|Mac OS X|AppleWebKit/|KHTML|like Gecko|Version/|'
-               'Safari/|Chrome/|[\d\._]+\+?|,|\w\w-\w\w|;|\(|\)|\s|)+$')
+    re.compile('^Mozilla/5\.0 \((Macintosh|Windows( NT)?|Android|X11|iPhone|iPad|Linux|'
+               'U|WOW64|x86_64|x64|PPC|Win64|Intel|Mac OS X|\s|\w\w-\w\w|[\d\._]+\+?|; )+\)'
+               '((AppleWebKit/|Version/|Safari/|Chrome/)[\d\.]+|\(KHTML, like Gecko\)|\s|)+$')
 ]
 
 browserfiles = [f for f in listdir(BROWSER_PATH) if isfile(join(BROWSER_PATH, f))]
