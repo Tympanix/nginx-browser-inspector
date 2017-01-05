@@ -39,14 +39,12 @@
 
         <div class="ui main text container">
             <h1 class="ui header">Privacy &amp; Security</h1>
-            <p>This project aims to secure your website and keep adversaries crawlsers and bots away from your
-            personal website. The typical and ineffective way of doing this is collecting a huge list of malicious keywords which
-            can be used to identify unwanted user agents. Mainting this list is a hassle. I say there's a better way!</p>
+            <p>This project aims to secure your website and keep adversaries crawlsers and bots away from your personal website. The typical and ineffective way of doing this is collecting a huge list of malicious keywords which can be used to identify unwanted
+                user agents. Mainting this list is a hassle. I say there's a better way!</p>
 
             <h1 class="ui header">Approaching the Problem</h1>
-            <p>Instead of finding the advesaries, why not find trusted browsers instead. Using the sliders below you can create
-            your own personal profile that matches only the browsers, operating systems, devices &amp; brands you trust! The end result
-            is a powerfull and personalized regex that can be used in your web server configuration like nginx and apache to keep bad guys out</p>
+            <p>Instead of finding the advesaries, why not find trusted browsers instead. Using the sliders below you can create your own personal profile that matches only the browsers, operating systems, devices &amp; brands you trust! The end result is a
+                powerfull and personalized regex that can be used in your web server configuration like nginx and apache to keep bad guys out</p>
 
             <!-- Operating Systems -->
             <h1 class="ui dividing header">Operating Systems</h1>
@@ -56,31 +54,25 @@
                         <i class="windows icon"></i>
                         Windows
                     </h3>
-                    <div class="ui slider checkbox center aligned">
-                        <input type="checkbox" tabindex="0" class="hidden">
-                        <label></label>
-                    </div>
+                    <toggle ng-model="os.windows"></toggle>
                 </div>
                 <div class="column">
                     <h3 class="ui header">
                         <i class="linux icon"></i>
                         Linux
                     </h3>
-                    <div class="ui slider checkbox">
-                        <input type="checkbox" tabindex="0" class="hidden">
-                        <label></label>
-                    </div>
+                    <toggle ng-model="os.linux"></toggle>
                 </div>
                 <div class="column">
                     <h3 class="ui header">
                         <i class="apple icon"></i>
                         Macintosh
                     </h3>
-                    <div class="ui slider checkbox">
-                        <input type="checkbox" tabindex="0" class="hidden">
-                        <label></label>
-                    </div>
+                    <toggle ng-model="os.apple"></toggle>
                 </div>
+            </div>
+            <div class="ui segment">
+                <p>{{list(os)}}</p>
             </div>
 
             <!-- Browsers -->
@@ -92,64 +84,47 @@
                             <i class="chrome icon"></i>
                             Chrome
                         </h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.chrome"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">
                             <i class="edge icon"></i>
                             Edge
                         </h3>
-                        <div class="ui slider checkbox">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.edge"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">
                             <i class="safari icon"></i>
                             Safari
                         </h3>
-                        <div class="ui slider checkbox">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.safari"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">
                             <i class="firefox icon"></i>
                             Firefox
                         </h3>
-                        <div class="ui slider checkbox">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.firefox"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">
                             <i class="internet explorer icon"></i>
                             Internet Explorer
                         </h3>
-                        <div class="ui slider checkbox">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.ie"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">
                             <i class="opera icon"></i>
                             Opera
                         </h3>
-                        <div class="ui slider checkbox">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="browsers.opera"></toggle>
                     </div>
                 </div>
+            </div>
+            <div class="ui segment">
+                {{list(browsers)}}
             </div>
 
             <!-- Devices -->
@@ -158,54 +133,36 @@
                 <div class="ui three column grid center aligned">
                     <div class="column">
                         <h3 class="ui header">iPad</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.ipad"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">iPhone</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.iphone"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">Samsung</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.samsung"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">HTC</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.htc"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">Huawei</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.huawei"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">OnePlus</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.oneplus"></toggle>
                     </div>
                     <div class="column">
                         <h3 class="ui header">Sony</h3>
-                        <div class="ui slider checkbox center aligned">
-                            <input type="checkbox" tabindex="0" class="hidden">
-                            <label></label>
-                        </div>
+                        <toggle ng-model="devices.sony"></toggle>
                     </div>
                 </div>
+            </div>
+            <div class="ui segment">
+                {{list(devices)}}
             </div>
         </div>
 
