@@ -1,0 +1,30 @@
+{
+  "name": "nginx-trusted-browsers",
+  "homepage": "https://github.com/Tympanix/nginx-browser-inspector",
+  "authors": [
+    "Mathias <tympanix@gmail.com>"
+  ],
+  "description": "Generate user agent regex for your trusted browsers",
+  "main": "app.js",
+  "keywords": [
+    "regex",
+    "nginx",
+    "user",
+    "agent",
+    "trusted",
+    "browser"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic": "^2.2.7",
+    "angular": "^1.6.1"
+  }
+}
