@@ -49,121 +49,66 @@
             <!-- Operating Systems -->
             <h1 class="ui dividing header">Operating Systems</h1>
             <div class="ui equal width grid center aligned">
-                <div class="column">
+                <div class="column" ng-repeat="opsys in os">
                     <h3 class="ui header">
-                        <i class="windows icon"></i>
-                        Windows
+                        <i class="icon" ng-class="opsys.icon"></i>
+                        {{opsys.constructor.name}}
                     </h3>
-                    <toggle ng-model="os.windows"></toggle>
+                    <toggle ng-model="opsys.enabled"></toggle>
                 </div>
-                <div class="column">
-                    <h3 class="ui header">
-                        <i class="linux icon"></i>
-                        Linux
-                    </h3>
-                    <toggle ng-model="os.linux"></toggle>
-                </div>
-                <div class="column">
-                    <h3 class="ui header">
-                        <i class="apple icon"></i>
-                        Macintosh
-                    </h3>
-                    <toggle ng-model="os.apple"></toggle>
-                </div>
-            </div>
-            <div class="ui segment">
-                <p>{{list(os)}}</p>
             </div>
 
             <!-- Browsers -->
             <h1 class="ui dividing header">Browsers</h1>
             <div class="ui massive form">
                 <div class="ui three column grid center aligned">
-                    <div class="column">
+                    <div class="column" ng-repeat="browser in browsers">
                         <h3 class="ui header">
-                            <i class="chrome icon"></i>
-                            Chrome
+                            <i class="icon" ng-class="browser.icon"></i>
+                            {{browser.constructor.name}}
                         </h3>
-                        <toggle ng-model="browsers.chrome"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">
-                            <i class="edge icon"></i>
-                            Edge
-                        </h3>
-                        <toggle ng-model="browsers.edge"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">
-                            <i class="safari icon"></i>
-                            Safari
-                        </h3>
-                        <toggle ng-model="browsers.safari"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">
-                            <i class="firefox icon"></i>
-                            Firefox
-                        </h3>
-                        <toggle ng-model="browsers.firefox"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">
-                            <i class="internet explorer icon"></i>
-                            Internet Explorer
-                        </h3>
-                        <toggle ng-model="browsers.ie"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">
-                            <i class="opera icon"></i>
-                            Opera
-                        </h3>
-                        <toggle ng-model="browsers.opera"></toggle>
+                        <toggle ng-model="browser.enabled"></toggle>
                     </div>
                 </div>
-            </div>
-            <div class="ui segment">
-                {{list(browsers)}}
             </div>
 
             <!-- Devices -->
             <h1 class="ui dividing header">Devices &amp; Brands</h1>
             <div class="ui massive form">
                 <div class="ui three column grid center aligned">
-                    <div class="column">
-                        <h3 class="ui header">iPad</h3>
-                        <toggle ng-model="devices.ipad"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">iPhone</h3>
-                        <toggle ng-model="devices.iphone"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">Samsung</h3>
-                        <toggle ng-model="devices.samsung"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">HTC</h3>
-                        <toggle ng-model="devices.htc"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">Huawei</h3>
-                        <toggle ng-model="devices.huawei"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">OnePlus</h3>
-                        <toggle ng-model="devices.oneplus"></toggle>
-                    </div>
-                    <div class="column">
-                        <h3 class="ui header">Sony</h3>
-                        <toggle ng-model="devices.sony"></toggle>
+                    <div class="column" ng-repeat="device in devices">
+                        <h3 class="ui header">{{device.constructor.name}}</h3>
+                        <toggle ng-model="device.enabled"></toggle>
                     </div>
                 </div>
             </div>
-            <div class="ui segment">
-                {{list(devices)}}
+
+            <h1 class="ui dividing header">Regex Tester</h1>
+            <div class="ui equal width grid center aligned">
+                <div class="column">
+                    <div class="ui big green fluid button" ng-click="computeRegex()">
+                        <i class="checkmark icon"></i>
+                        Update Regex
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui big blue fluid button" ng-click="getUserAgent()">
+                        <i class="user icon"></i>
+                        Get My User Agent
+                    </div>
+                </div>
             </div>
+            <div class="ui segment">{{regex_string}}</div>
+            <div class="ui big form">
+                <div class="field">
+                    <textarea ng-model="useragent" rows="4" ng-change="match()" placeholder="Paste your user agent here..."></textarea>
+                </div>
+            </div>
+
+            <div class="ui inverted red segment center aligned" ng-class="status ? 'green' : 'red'">
+                <p>{{statusText}}</p>
+            </div>
+
         </div>
 
         <div class="ui inverted vertical footer segment">

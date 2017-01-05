@@ -4,7 +4,7 @@ angular.module('nginxTrustedBrowsers').factory('browsers', function() {
 
     function Chrome() {
         this.icon = 'chrome'
-        this.platform = ['Chrome']
+        this.platform = ['Chrome', 'Safari']
     }
 
     function Edge() {

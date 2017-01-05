@@ -4,7 +4,7 @@ angular.module('nginxTrustedBrowsers').factory('os', function() {
 
     function Windows() {
         this.icon = 'windows'
-        this.system = ['Windows', 'NT']
+        this.system = ['Windows( NT)?', 'Win64', 'x64']
     }
 
     function Linux() {
