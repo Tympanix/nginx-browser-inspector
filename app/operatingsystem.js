@@ -9,12 +9,12 @@ angular.module('nginxTrustedBrowsers').factory('os', function() {
 
     function Linux() {
         this.icon = 'linux'
-        this.system = ['Linux', 'X11']
+        this.system = ['Linux', 'X11', 'x86_64']
     }
 
     function Mac() {
         this.icon = 'apple'
-        this.system = ['Macintosh']
+        this.system = ['Macintosh', '(Intel|PPC) Mac OS X']
     }
 
     return [

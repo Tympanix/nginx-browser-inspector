@@ -4,7 +4,6 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
 
     UA_REGEX = '^Mozilla\\/5\\.0\\s\\((SYSTEM)+ANDROID\\)((PLATFORM)\\/[A-Z\\d\\.+]+|EXTENSIONS)+$'
     ANDROID_REGEX = '(Android\\s[\\d\\.]+;\\s(\\w\\w-\\w\\w;\\s)?(DEVICES)\\s?([\\w\\d_]+)?\\sBuild\\/[A-Z\\s]+)?'
-    EXTENSIONS = ['\\(KHTML, like Gecko\\)|\\s']
 
     $scope.regex_string = ''
     $scope.status = undefined
@@ -63,21 +62,32 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
         $scope.match()
     }
 
+    function buildRegExString(system, android, platform, extensions) {
+        let regex = UA_REGEX
+        regex = regex.replace('SYSTEM', system.join('|'))
+        regex = regex.replace('ANDROID', buildAndroidRegEx(android))
+        regex = regex.replace('PLATFORM', platform.join('|'))
+        regex = regex.replace('EXTENSIONS', extensions.join('|'))
+        return regex
+    }
+
+    function buildAndroidRegEx(android) {
+        if (!android.length) return ''
+        return ANDROID_REGEX.replace('DEVICES', android.join('|'))
+    }
+
     $scope.computeRegex = function() {
-        let enabled = os.concat(browsers).concat(devices).filter(isEnabled)
+        let enabled = [].concat(os).concat(browsers).concat(devices).filter(isEnabled)
         enabled.push(common)
         console.log("Enabled", enabled);
 
         let system = getSpec(enabled, 'system')
-        let platform = getSpec(enabled, 'platform')
         let android = getSpec(enabled, 'android')
+        let platform = getSpec(enabled, 'platform')
+        let extensions = getSpec(enabled, 'extensions')
 
-        android_regex = android.length? ANDROID_REGEX.replace('DEVICES', android.join('|')) : ''
-        $scope.regex_string = UA_REGEX.replace('SYSTEM', system.join('|')).replace('ANDROID', android_regex)
-            .replace('PLATFORM', platform.join('|')).replace('EXTENSIONS', EXTENSIONS)
-
+        $scope.regex_string = buildRegExString(system, android, platform, extensions)
         regex = RegExp($scope.regex_string)
-
         $scope.match()
     }
 
