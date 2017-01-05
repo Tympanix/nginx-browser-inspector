@@ -92,3 +92,6 @@ ENV/
 
 # Directories
 .idea
+node_modules
+bower_components
+personal.txt
