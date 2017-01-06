@@ -2,7 +2,7 @@ var app = angular.module("nginxTrustedBrowsers", []);
 
 app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'devices', 'common', function($window, $scope, os, browsers, devices, common) {
 
-    $scope.VERSION = '1.0.2'
+    $scope.VERSION = '1.0.3'
 
     UA_REGEX = /^Mozilla\/5\.0\s\((SYSTEM)+ANDROID\)((PLATFORM)\/[A-Z\d\.+]+|EXTENSIONS)+$/
     ANDROID_REGEX = /(Android\s[\d\.]+;\s(\w\w-\w\w;\s)?(DEVICES)\s?([\w\d_]+)?\sBuild\/[A-Z\d]+)?/
