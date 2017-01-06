@@ -24,7 +24,8 @@ angular.module('nginxTrustedBrowsers').factory('browsers', function() {
 
     function InternetExplorer() {
         this.icon = 'internet explorer'
-        this.system = ['MSIE', 'rev:[\d\.]+']
+        this.system = ['compatible', 'MSIE', 'rv:[\\d\\.]+', 'Trident\\/\\d.\\d', '\\.NET\\d\\.\\d[A-Z]']
+        this.extensions = ['like Gecko']
     }
 
     function Opera() {
