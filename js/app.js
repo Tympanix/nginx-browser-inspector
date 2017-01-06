@@ -4,11 +4,11 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
 
     $scope.VERSION = '1.0.2'
 
-    UA_REGEX = '^Mozilla\\/5\\.0\\s\\((SYSTEM)+ANDROID\\)((PLATFORM)\\/[A-Z\\d\\.+]+|EXTENSIONS)+$'
-    ANDROID_REGEX = '(Android\\s[\\d\\.]+;\\s(\\w\\w-\\w\\w;\\s)?(DEVICES)\\s?([\\w\\d_]+)?\\sBuild\\/[A-Z\\d]+)?'
+    UA_REGEX = /^Mozilla\/5\.0\s\((SYSTEM)+ANDROID\)((PLATFORM)\/[A-Z\d\.+]+|EXTENSIONS)+$/
+    ANDROID_REGEX = /(Android\s[\d\.]+;\s(\w\w-\w\w;\s)?(DEVICES)\s?([\w\d_]+)?\sBuild\/[A-Z\d]+)?/
 
-    $scope.regex_string = ''
     $scope.status = undefined
+    $scope.regex = undefined
 
     $scope.os = os
     $scope.browsers = browsers
@@ -22,22 +22,14 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
         }).join(', ')
     }
 
-    Set.prototype.union = function(setB) {
-        var union = new Set(this);
-        for (var elem of setB) {
-            union.add(elem);
-        }
-        return union;
+    function getSpec(rules, value) {
+        return _.reduce(rules, function(memo, rule) {
+            return memo.concat(rule[value] || [])
+        }, [])
     }
 
-    function getSpec(specs, value) {
-        return Array.from(specs.reduce(function(acc, curr) {
-            return acc.union(curr[value] || [])
-        }, new Set()))
-    }
-
-    function isEnabled(spec) {
-        return spec.enabled
+    function isEnabled(rule) {
+        return rule.enabled
     }
 
     $scope.updateStatusText = function() {
@@ -55,7 +47,7 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
     $scope.updateStatusText()
 
     $scope.match = function() {
-        $scope.status = regex.test($scope.useragent)
+        $scope.status = $scope.regex.test($scope.useragent)
         $scope.updateStatusText()
     }
 
@@ -65,31 +57,40 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
     }
 
     function buildRegExString(system, android, platform, extensions) {
-        let regex = UA_REGEX
-        regex = regex.replace('SYSTEM', system.join('|'))
+        let regex = UA_REGEX.source
+        console.log('Base regex', regex);
+        regex = regex.replace('SYSTEM', regExOr(system))
         regex = regex.replace('ANDROID', buildAndroidRegEx(android))
-        regex = regex.replace('PLATFORM', platform.join('|'))
-        regex = regex.replace('EXTENSIONS', extensions.join('|'))
+        regex = regex.replace('PLATFORM', regExOr(platform))
+        regex = regex.replace('EXTENSIONS', regExOr(extensions))
         return regex
+    }
+
+    function regExSource(regex) {
+        return regex.source
+    }
+
+    function regExOr(list) {
+        list = _.map(list, regExSource)
+        list = _.uniq(list, _.identity)
+        return list.join('|')
     }
 
     function buildAndroidRegEx(android) {
         if (!android.length) return ''
-        return ANDROID_REGEX.replace('DEVICES', android.join('|'))
+        return ANDROID_REGEX.source.replace('DEVICES', regExOr(android))
     }
 
     $scope.computeRegex = function() {
-        let enabled = [].concat(os).concat(browsers).concat(devices).filter(isEnabled)
-        enabled.push(common)
-        console.log("Enabled", enabled);
+        let all = _.union(os, browsers, devices, common)
+        let enabled = _.filter(all, isEnabled)
 
         let system = getSpec(enabled, 'system')
         let android = getSpec(enabled, 'android')
         let platform = getSpec(enabled, 'platform')
         let extensions = getSpec(enabled, 'extensions')
 
-        $scope.regex_string = buildRegExString(system, android, platform, extensions)
-        regex = RegExp($scope.regex_string)
+        $scope.regex = RegExp(buildRegExString(system, android, platform, extensions))
         $scope.match()
     }
 
@@ -143,17 +144,17 @@ angular.module('nginxTrustedBrowsers').factory('os', function() {
 
     function Windows() {
         this.icon = 'windows'
-        this.system = ['Windows( NT)?', 'Win64', 'x64', 'WOW64']
+        this.system = [/Windows( NT)?/, /Win64/, /x64/, /WOW64/]
     }
 
     function Linux() {
         this.icon = 'linux'
-        this.system = ['Linux', 'X11', 'x86_64']
+        this.system = [/Linux/, /X11/, /x86_64/]
     }
 
     function Mac() {
         this.icon = 'apple'
-        this.system = ['Macintosh', '(Intel|PPC) Mac OS X']
+        this.system = [/Macintosh/, /(Intel|PPC) Mac OS X/]
     }
 
     return [
@@ -169,33 +170,33 @@ angular.module('nginxTrustedBrowsers').factory('browsers', function() {
 
     function Chrome() {
         this.icon = 'chrome'
-        this.platform = ['Chrome', 'Safari']
+        this.platform = [/Chrome/, /Safari/]
     }
 
     function Edge() {
         this.icon = 'edge'
-        this.platform = ['Edge']
+        this.platform = [/Edge/]
     }
 
     function Safari() {
         this.icon = 'safari'
-        this.platform = ['Safari']
+        this.platform = [/Safari/]
     }
 
     function Firefox() {
         this.icon = 'firefox'
-        this.platform = ['Firefox']
+        this.platform = [/Firefox/]
     }
 
     function InternetExplorer() {
         this.icon = 'internet explorer'
-        this.system = ['compatible', 'MSIE', 'rv:[\\d\\.]+', 'Trident\\/\\d.\\d', '\\.NET\\d\\.\\d[A-Z]']
-        this.extensions = ['like Gecko']
+        this.system = [/compatible/, /MSIE/, /rv:[\d\.]+/, /Trident\/\d.\d/, /\.NET\d\.\d[A-Z]/]
+        this.extensions = [/like Gecko/]
     }
 
     function Opera() {
         this.icon = 'opera'
-        this.platform = ['Opera']
+        this.platform = [/Opera/]
     }
 
     return [
@@ -212,45 +213,45 @@ angular.module('nginxTrustedBrowsers').factory('browsers', function() {
 
 angular.module('nginxTrustedBrowsers').factory('devices', function() {
 
-    MOBILE_REGEX = 'Mobile(\\/[\\w\\d]+?)?'
+    MOBILE_REGEX = /Mobile(\/[\w\d]+?)?/
 
     function iPad() {
-        this.system = ['iPad', '(like )?Mac OS X', 'CPU OS']
+        this.system = [/iPad/, /(like )?Mac OS X/, /CPU OS/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function iPhone() {
-        this.system = ['(CPU )?iPhone( OS)?', '(like )?Mac OS X']
+        this.system = [/(CPU )?iPhone( OS)?/, /(like )?Mac OS X/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function Samsung() {
-        this.system = ['Linux']
-        this.android = ['Samsung', 'Galaxy']
+        this.system = [/Linux/]
+        this.android = [/Samsung/, /Galaxy/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function HTC() {
-        this.system = ['Linux']
-        this.android = ['HTC']
+        this.system = [/Linux/]
+        this.android = [/HTC/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function Huawei() {
-        this.system = ['Linux']
-        this.android = ['Huawei']
+        this.system = [/Linux/]
+        this.android = [/Huawei/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function OnePlus() {
-        this.system = ['Linux']
-        this.android = ['A0001']
+        this.system = [/Linux/]
+        this.android = [/A0001/]
         this.extensions = [MOBILE_REGEX]
     }
 
     function Sony() {
-        this.system = ['Linux']
-        this.android = ['Sony']
+        this.system = [/Linux/]
+        this.android = [/Sony/]
         this.extensions = [MOBILE_REGEX]
     }
 
@@ -269,11 +270,12 @@ angular.module('nginxTrustedBrowsers').factory('devices', function() {
 
 angular.module('nginxTrustedBrowsers').factory('common', function() {
 
-    function Default() {
-        this.system = ['U', ';?\\s', '\\w\\w-\\w\\w', '[\\d\\._]+\\+?']
-        this.platform = ['Version', 'AppleWebKit']
-        this.extensions = ['\\(KHTML, like Gecko\\)|\\s']
+    function Common() {
+        this.enabled = true
+        this.system = [/U/, /;?\s/, /\w\w-\w\w/, /[\d\._]+\+?/]
+        this.platform = [/Version/, /AppleWebKit/]
+        this.extensions = [/\(KHTML, like Gecko\)/, /\s/]
     }
 
-    return new Default()
+    return [new Common()]
 });

@@ -4,11 +4,11 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
 
     $scope.VERSION = '1.0.2'
 
-    UA_REGEX = '^Mozilla\\/5\\.0\\s\\((SYSTEM)+ANDROID\\)((PLATFORM)\\/[A-Z\\d\\.+]+|EXTENSIONS)+$'
-    ANDROID_REGEX = '(Android\\s[\\d\\.]+;\\s(\\w\\w-\\w\\w;\\s)?(DEVICES)\\s?([\\w\\d_]+)?\\sBuild\\/[A-Z\\d]+)?'
+    UA_REGEX = /^Mozilla\/5\.0\s\((SYSTEM)+ANDROID\)((PLATFORM)\/[A-Z\d\.+]+|EXTENSIONS)+$/
+    ANDROID_REGEX = /(Android\s[\d\.]+;\s(\w\w-\w\w;\s)?(DEVICES)\s?([\w\d_]+)?\sBuild\/[A-Z\d]+)?/
 
-    $scope.regex_string = ''
     $scope.status = undefined
+    $scope.regex = undefined
 
     $scope.os = os
     $scope.browsers = browsers
@@ -22,22 +22,14 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
         }).join(', ')
     }
 
-    Set.prototype.union = function(setB) {
-        var union = new Set(this);
-        for (var elem of setB) {
-            union.add(elem);
-        }
-        return union;
+    function getSpec(rules, value) {
+        return _.reduce(rules, function(memo, rule) {
+            return memo.concat(rule[value] || [])
+        }, [])
     }
 
-    function getSpec(specs, value) {
-        return Array.from(specs.reduce(function(acc, curr) {
-            return acc.union(curr[value] || [])
-        }, new Set()))
-    }
-
-    function isEnabled(spec) {
-        return spec.enabled
+    function isEnabled(rule) {
+        return rule.enabled
     }
 
     $scope.updateStatusText = function() {
@@ -55,7 +47,7 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
     $scope.updateStatusText()
 
     $scope.match = function() {
-        $scope.status = regex.test($scope.useragent)
+        $scope.status = $scope.regex.test($scope.useragent)
         $scope.updateStatusText()
     }
 
@@ -65,31 +57,40 @@ app.controller('mainController', ['$window', '$scope', 'os', 'browsers', 'device
     }
 
     function buildRegExString(system, android, platform, extensions) {
-        let regex = UA_REGEX
-        regex = regex.replace('SYSTEM', system.join('|'))
+        let regex = UA_REGEX.source
+        console.log('Base regex', regex);
+        regex = regex.replace('SYSTEM', regExOr(system))
         regex = regex.replace('ANDROID', buildAndroidRegEx(android))
-        regex = regex.replace('PLATFORM', platform.join('|'))
-        regex = regex.replace('EXTENSIONS', extensions.join('|'))
+        regex = regex.replace('PLATFORM', regExOr(platform))
+        regex = regex.replace('EXTENSIONS', regExOr(extensions))
         return regex
+    }
+
+    function regExSource(regex) {
+        return regex.source
+    }
+
+    function regExOr(list) {
+        list = _.map(list, regExSource)
+        list = _.uniq(list, _.identity)
+        return list.join('|')
     }
 
     function buildAndroidRegEx(android) {
         if (!android.length) return ''
-        return ANDROID_REGEX.replace('DEVICES', android.join('|'))
+        return ANDROID_REGEX.source.replace('DEVICES', regExOr(android))
     }
 
     $scope.computeRegex = function() {
-        let enabled = [].concat(os).concat(browsers).concat(devices).filter(isEnabled)
-        enabled.push(common)
-        console.log("Enabled", enabled);
+        let all = _.union(os, browsers, devices, common)
+        let enabled = _.filter(all, isEnabled)
 
         let system = getSpec(enabled, 'system')
         let android = getSpec(enabled, 'android')
         let platform = getSpec(enabled, 'platform')
         let extensions = getSpec(enabled, 'extensions')
 
-        $scope.regex_string = buildRegExString(system, android, platform, extensions)
-        regex = RegExp($scope.regex_string)
+        $scope.regex = RegExp(buildRegExString(system, android, platform, extensions))
         $scope.match()
     }
 

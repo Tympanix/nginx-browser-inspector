@@ -39,7 +39,8 @@
                     </div>
                 </div>
                 <div class="right menu">
-                    <div ng-cloak class="item">Version: {{VERSION}}</div>
+                    <div ng-cloak class="item">Version:
+                        {{VERSION}}</div>
                 </div>
             </div>
         </div>
@@ -105,10 +106,10 @@
                     </div>
                 </div>
             </div>
-            <div class="ui segment">{{regex_string}}</div>
+            <div class="ui segment">{{regex.source}}</div>
             <div class="ui big form">
                 <div class="field">
-                    <textarea ng-model="useragent" rows="4" ng-change="match()" placeholder="Paste your user agent here..."></textarea>
+                    <textarea ng-model="useragent" rows="4" ng-change="match()" placeholder="Paste your user agent here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                 </div>
             </div>
 
