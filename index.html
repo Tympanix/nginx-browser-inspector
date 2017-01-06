@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="right menu">
-                    <div class="item">Version: {{VERSION}}</div>
+                    <div ng-cloak class="item">Version: {{VERSION}}</div>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
             <!-- Operating Systems -->
             <h1 class="ui dividing header">Operating Systems</h1>
             <div class="ui equal width grid center aligned">
-                <div class="column" ng-repeat="opsys in os">
+                <div ng-cloak class="column" ng-repeat="opsys in os">
                     <h3 class="ui header">
                         <i class="icon" ng-class="opsys.icon"></i>
                         {{opsys.constructor.name}}
@@ -65,7 +65,7 @@
             <h1 class="ui dividing header">Browsers</h1>
             <div class="ui massive form">
                 <div class="ui three column grid center aligned">
-                    <div class="column" ng-repeat="browser in browsers">
+                    <div ng-cloak class="column" ng-repeat="browser in browsers">
                         <h3 class="ui header">
                             <i class="icon" ng-class="browser.icon"></i>
                             {{browser.constructor.name}}
@@ -79,7 +79,7 @@
             <h1 class="ui dividing header">Devices &amp; Brands</h1>
             <div class="ui massive form">
                 <div class="ui three column grid center aligned">
-                    <div class="column" ng-repeat="device in devices">
+                    <div ng-cloak class="column" ng-repeat="device in devices">
                         <h3 class="ui header">{{device.constructor.name}}</h3>
                         <toggle ng-model="device.enabled"></toggle>
                     </div>
@@ -109,7 +109,7 @@
             </div>
 
             <div class="ui inverted red segment center aligned" ng-class="status ? 'green' : 'red'">
-                <p>{{statusText}}</p>
+                <p ng-cloak>{{statusText}}</p>
             </div>
 
         </div>
