@@ -220,7 +220,7 @@ angular.module('nginxTrustedBrowsers').factory('devices', function() {
     }
 
     function iPhone() {
-        this.system = ['iPhone', '(like )?Mac OS X']
+        this.system = ['(CPU )?iPhone( OS)?', '(like )?Mac OS X']
         this.extensions = [MOBILE_REGEX]
     }
 
@@ -270,7 +270,7 @@ angular.module('nginxTrustedBrowsers').factory('devices', function() {
 angular.module('nginxTrustedBrowsers').factory('common', function() {
 
     function Default() {
-        this.system = ['U', ';?\\s', '[\\d\\._]+\\+?']
+        this.system = ['U', ';?\\s', '\\w\\w-\\w\\w', '[\\d\\._]+\\+?']
         this.platform = ['Version', 'AppleWebKit']
         this.extensions = ['\\(KHTML, like Gecko\\)|\\s']
     }

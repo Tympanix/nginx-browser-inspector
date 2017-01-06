@@ -10,7 +10,7 @@ angular.module('nginxTrustedBrowsers').factory('devices', function() {
     }
 
     function iPhone() {
-        this.system = ['iPhone', '(like )?Mac OS X']
+        this.system = ['(CPU )?iPhone( OS)?', '(like )?Mac OS X']
         this.extensions = [MOBILE_REGEX]
     }
 
